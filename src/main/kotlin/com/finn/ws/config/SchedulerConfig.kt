@@ -20,5 +20,4 @@ class SchedulerConfig {
     fun taskExecutor(): Executor {
         return SimpleAsyncTaskExecutor()
     }
-
 }

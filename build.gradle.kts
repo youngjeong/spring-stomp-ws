@@ -40,11 +40,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-	compile("org.webjars:webjars-locator-core")
-	compile("org.webjars:sockjs-client:1.0.2")
-	compile("org.webjars:stomp-websocket:2.3.3")
-	compile("org.webjars:bootstrap:3.3.7")
-	compile("org.webjars:jquery:3.1.0")
+	implementation("org.webjars:webjars-locator-core")
+	implementation("org.webjars:sockjs-client:1.0.2")
+	implementation("org.webjars:stomp-websocket:2.3.3")
+	implementation("org.webjars:bootstrap:3.3.7")
+	implementation("org.webjars:jquery:3.1.0")
 }

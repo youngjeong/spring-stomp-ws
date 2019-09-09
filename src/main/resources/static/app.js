@@ -13,12 +13,12 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket = new SockJS('/ws/coinone');
+    var socket = new SockJS('/ws/finn');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/ping', function (greeting) {
+        stompClient.subscribe('/topic/subs_example', function (greeting) {
             showGreeting(greeting.body);
         });
     });
@@ -33,7 +33,7 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/app/example", {}, $("#name ").val());
 }
 
 function showGreeting(message) {

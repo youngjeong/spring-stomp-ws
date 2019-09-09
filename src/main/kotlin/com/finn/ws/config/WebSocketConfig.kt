@@ -7,6 +7,7 @@ import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
+import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.messaging.support.ChannelInterceptorAdapter
 import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.scheduling.TaskScheduler
@@ -38,16 +39,17 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
                         )
                 )
                 .setTaskScheduler(this.messageBrokerTaskScheduler)
+        registry.setApplicationDestinationPrefixes("/app")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/ws/coinone")
+        registry.addEndpoint("/ws/finn")
                 .setAllowedOrigins("*")
                 .withSockJS()
     }
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
-        registration.interceptors(object : ChannelInterceptorAdapter() {
+        registration.interceptors(object : ChannelInterceptor {
             override fun preSend(message: Message<*>, channel: MessageChannel): Message<*> {
                 val accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor::class.java)!!
 
