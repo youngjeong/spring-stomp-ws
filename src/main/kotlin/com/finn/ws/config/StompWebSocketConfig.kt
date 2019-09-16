@@ -4,21 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
+import org.springframework.messaging.converter.MessageConverter
+import org.springframework.messaging.converter.StringMessageConverter
 import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.messaging.support.ChannelInterceptor
-import org.springframework.messaging.support.ChannelInterceptorAdapter
 import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
 
-
 @Configuration
 @EnableWebSocketMessageBroker
-class WebSocketConfig : WebSocketMessageBrokerConfigurer {
+class StompWebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     @Autowired
     lateinit var stompHeaderUtility: StompHeaderUtility
@@ -31,6 +31,7 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     }
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
+//         PUB-SUB channel. handle SUBSCRIBE
         registry.enableSimpleBroker("/topic")
                 .setHeartbeatValue(
                         longArrayOf(
@@ -39,7 +40,14 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
                         )
                 )
                 .setTaskScheduler(this.messageBrokerTaskScheduler)
+
+//         Request channel. handle SEND
         registry.setApplicationDestinationPrefixes("/app")
+    }
+
+    override fun configureMessageConverters(messageConverters: MutableList<MessageConverter>): Boolean {
+        messageConverters.add(StringMessageConverter())
+        return super.configureMessageConverters(messageConverters)
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
