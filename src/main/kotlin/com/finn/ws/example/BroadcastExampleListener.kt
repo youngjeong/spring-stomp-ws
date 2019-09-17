@@ -12,7 +12,7 @@ class BroadcastExampleListener(
     @RabbitListener(queues = ["example_queue"])
     fun onMessage(message: String) {
         simpMessagingTemplate.convertAndSend(
-                "/topic/subs_example",
+                "/subs/subs_example",
                 "$message [BROADCASTED]"
         )
     }

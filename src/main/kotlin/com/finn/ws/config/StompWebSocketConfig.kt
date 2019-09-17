@@ -1,11 +1,10 @@
 package com.finn.ws.config
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
-import org.springframework.messaging.converter.MessageConverter
-import org.springframework.messaging.converter.StringMessageConverter
 import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
@@ -18,12 +17,16 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-class StompWebSocketConfig : WebSocketMessageBrokerConfigurer {
+class StompWebSocketConfig(private val rabbitProperties: RabbitProperties) : WebSocketMessageBrokerConfigurer {
 
     @Autowired
     lateinit var stompHeaderUtility: StompHeaderUtility
 
     private lateinit var messageBrokerTaskScheduler: TaskScheduler
+
+    companion object {
+        const val STOMP_SEND_PREFIX = "/app"
+    }
 
     @Autowired
     fun setMessageBrokerTaskScheduler(taskScheduler: TaskScheduler) {
@@ -32,7 +35,7 @@ class StompWebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
 //         PUB-SUB channel. handle SUBSCRIBE
-        registry.enableSimpleBroker("/topic")
+        registry.enableSimpleBroker("/subs")
                 .setHeartbeatValue(
                         longArrayOf(
                                 5000,// heartbeat-in milliseconds
@@ -42,12 +45,7 @@ class StompWebSocketConfig : WebSocketMessageBrokerConfigurer {
                 .setTaskScheduler(this.messageBrokerTaskScheduler)
 
 //         Request channel. handle SEND
-        registry.setApplicationDestinationPrefixes("/app")
-    }
-
-    override fun configureMessageConverters(messageConverters: MutableList<MessageConverter>): Boolean {
-        messageConverters.add(StringMessageConverter())
-        return super.configureMessageConverters(messageConverters)
+        registry.setApplicationDestinationPrefixes(STOMP_SEND_PREFIX)
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {

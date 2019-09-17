@@ -14,6 +14,7 @@ buildscript {
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.31"
 	id("org.jetbrains.kotlin.plugin.spring") version "1.3.31"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.3.31"
 	id("org.springframework.boot") version "2.1.0.RELEASE"
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 }
@@ -38,9 +39,13 @@ tasks.withType<Test> {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
-	implementation("org.springframework.boot:spring-boot-starter-reactor-netty")
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+
     implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.1.RELEASE")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("mysql:mysql-connector-java")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -52,4 +57,5 @@ dependencies {
 	implementation("org.webjars:jquery:3.1.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
