@@ -8,12 +8,6 @@ import java.security.Principal
 @Component
 class StompHeaderUtility() {
     fun createPrincipalFromStompConnectCommandHeader(headerAccessor: StompHeaderAccessor): Principal? {
-        return if (StompCommand.CONNECT == headerAccessor.command) {
-            headerAccessor.getNativeHeader("Authorization")?.let {
-                null
-            }
-        } else {
-            null
-        }
+        return if (StompCommand.CONNECT == headerAccessor.command) headerAccessor.getHeader("simpUser") as Principal? else null
     }
 }

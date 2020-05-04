@@ -13,7 +13,7 @@ class BroadcastExampleListener(
     fun onMessage(message: String) {
         simpMessagingTemplate.convertAndSend(
                 "/subs/subs_example",
-                "$message [BROADCASTED]"
+                message
         )
     }
 }
